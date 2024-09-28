@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>To-Do list
+	<title>Shopping list
 	</title>
 	<link rel="stylesheet" href="style.css">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
@@ -19,12 +19,12 @@
 			  <div class="card" style="border-radius: 15px;">
 				<div class="card-body p-5">
 	  
-				  <h6 class="mb-3">Todo List</h6>
+				  <h6 class="mb-3">Shopping list</h6>
 	  
 				  <form class="d-flex justify-content-center align-items-center mb-4 ">
 					<div class="form-outline flex-fill">
 					  <input type="text" id="inputT" class="form-control form-control-lg" />
-					  <label class="form-label" for="form3">What do you need to do today?</label>
+					  <label class="form-label" for="form3">What do you want to buy?</label>
 					</div>
 					<button type="submit" class="btn btn-primary btn-lg ms-2" id="addB">Add</button>
 				  </form>
@@ -44,7 +44,7 @@
 					</li>
 				  </ul>
 
-				  <ul class="list-group mb-0" id="todoList">
+				  <ul class="list-group mb-0" id="shoppingList">
 					 
 				
 				  </ul>
@@ -63,17 +63,17 @@
 
 <script>
 // Main parts of html side for user interaction
-const todoInput = document.getElementById('inputT');
+const listInput = document.getElementById('inputT');
 const addButton = document.getElementById('addB');
-const todoList = document.getElementById('todoList');
+const shoppingList = document.getElementById('shoppingList');
 const activeMenu = document.getElementById('active');
 const allMenu = document.getElementById('all');
 const completedMenu = document.getElementById('completed');
 
 // Arrays for 3 types of tasks 
-let activeList = JSON.parse(sessionStorage.getItem('todoTask')) || [];
-let completedList = JSON.parse(sessionStorage.getItem('completedTask')) || [];
-let allTasks = JSON.parse(sessionStorage.getItem('todoTask')) || [];
+let activeList = JSON.parse(sessionStorage.getItem('listElement')) || [];
+let boughtItem = JSON.parse(sessionStorage.getItem('boughtItem')) || [];
+let allItems = JSON.parse(sessionStorage.getItem('listElement')) || [];
 
 // Random generated id for tasks
 function randomId() {
@@ -86,36 +86,36 @@ function randomId() {
 // Task added to list via input typed by user
  addButton.addEventListener('click', function addToDo(event)  {
   event.preventDefault();
-      if (todoInput.value == ''){
+      if (listInput.value == ''){
         alert ('You have to type something');
       } 
       else  {
-        const todoTask = {
+        const listElement = {
           id: randomId(),
-          text: todoInput.value,
+          text: listInput.value,
           isDone: false
         }
       if (window.location.href.indexOf('#all') > -1 || window.location.href.indexOf('#active') > -1) {
         const newTodo = document.createElement('div');
         newTodo.innerHTML =  
-        `<li id="${todoTask.id}" class="list-group-item justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom pb-0 mb-0">
-         <p class="pb-1 mb-1"><input class="form-check-input me-2" type="checkbox" onclick="completeToDo(event); "/>${todoInput.value}</p>
+        `<li id="${listElement.id}" class="list-group-item justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom pb-0 mb-0">
+         <p class="pb-1 mb-1"><input class="form-check-input me-2" type="checkbox" onclick="completeToDo(event); "/>${listInput.value}</p>
         </li>`;
         
-      todoList.appendChild(newTodo);
+      shoppingList.appendChild(newTodo);
 
       } else if (window.location.href.indexOf('#completed') > -1 ) {
         console.log('Nothing to display here')
       }
 
       
-      activeList.push(todoTask);
-      sessionStorage.setItem('todoTask', JSON.stringify(activeList));
+      activeList.push(listElement);
+      sessionStorage.setItem('listElement', JSON.stringify(activeList));
       
-      allTasks.push(todoTask);
-      sessionStorage.setItem('todoTask', JSON.stringify(allTasks));
+      allItems.push(listElement);
+      sessionStorage.setItem('listElement', JSON.stringify(allItems));
 
-      todoInput.value = '';
+      listInput.value = '';
     }
   }
 );
@@ -129,25 +129,25 @@ function completeToDo(event) {
   let selectedDiv = event.target.parentNode.parentNode.parentNode;
   selectedText.classList.toggle('text-decoration-line-through'); 
   
-  let index = allTasks.map(todoTask => {
-    return todoTask.id;}).indexOf(selectedId);
-    if (allTasks[index].isDone == false){
-    allTasks[index].isDone == false
-    ? (allTasks[index].isDone = true) 
-    : (allTasks[index].isDone = false);
+  let index = allItems.map(listElement => {
+    return listElement.id;}).indexOf(selectedId);
+    if (allItems[index].isDone == false){
+    allItems[index].isDone == false
+    ? (allItems[index].isDone = true) 
+    : (allItems[index].isDone = false);
 
-    const completedTask = {
+    const boughtItem = {
       id: selectedId,
       text: selectedText.innerText,
-      isDone:allTasks[index].isDone
+      isDone:allItems[index].isDone
     };
 
-    JSON.parse(sessionStorage.getItem('todoTask'));
+    JSON.parse(sessionStorage.getItem('listElement'));
     activeList.splice(index, 1);
-    sessionStorage.setItem('todoTask', JSON.stringify(allTasks));
+    sessionStorage.setItem('listElement', JSON.stringify(allItems));
 
-    completedList.push(completedTask);
-    sessionStorage.setItem('completedTask', JSON.stringify(completedList));
+    boughtItem.push(boughtItem);
+    sessionStorage.setItem('boughtItem', JSON.stringify(boughtItem));
     
 
   // With timeout the selected task is removed from display
@@ -157,17 +157,17 @@ function completeToDo(event) {
       }, 3000);
   }    
 // Undo the completed task 
-      } else if (allTasks[index].isDone == true) {
-      let index = allTasks.map(completedTask => {
-        return completedTask.id;}).indexOf(selectedId);
-      allTasks[index].isDone == true
-    ? (allTasks[index].isDone = false) 
-    : (allTasks[index].isDone = true);
+      } else if (allItems[index].isDone == true) {
+      let index = allItems.map(boughtItem => {
+        return boughtItem.id;}).indexOf(selectedId);
+      allItems[index].isDone == true
+    ? (allItems[index].isDone = false) 
+    : (allItems[index].isDone = true);
 
-      const completedTask = {
+      const boughtItem = {
         id: selectedId,
         text: selectedText.innerText,
-        isDone:allTasks[index].isDone
+        isDone:allItems[index].isDone
       };
       if (window.location.href.indexOf('completed') > -1 )
     {
@@ -175,10 +175,10 @@ function completeToDo(event) {
       selectedDiv.classList.toggle('visually-hidden');
     }, 3000);
   }
-      completedList.splice(index.completedTask, 1);
-      sessionStorage.removeItem('completedTask');
-      activeList.push(completedTask);
-      sessionStorage.setItem('todoTask', JSON.stringify(allTasks));
+      boughtItem.splice(index.boughtItem, 1);
+      sessionStorage.removeItem('boughtItem');
+      activeList.push(boughtItem);
+      sessionStorage.setItem('listElement', JSON.stringify(allItems));
       
     }
   }
@@ -191,10 +191,10 @@ function selectView(event)  {
   // Show all tasks added by the user
   if (event.target.id == 'all') {
 
-    todoList.innerHTML = allTasks.map(todoTask => 
+    shoppingList.innerHTML = allItems.map(listElement => 
       `<div>
-        <li id="${todoTask.id}" class="list-group-item justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom pb-0 mb-0">
-          <p class="pb-1 mb-1 ${todoTask.isDone}"><input class="form-check-input me-2" type="checkbox" onclick="completeToDo(event);"/>${todoTask.text}</p> 
+        <li id="${listElement.id}" class="list-group-item justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom pb-0 mb-0">
+          <p class="pb-1 mb-1 ${listElement.isDone}"><input class="form-check-input me-2" type="checkbox" onclick="completeToDo(event);"/>${listElement.text}</p> 
           </li>
       </div>    
     `).join('');
@@ -207,11 +207,11 @@ function selectView(event)  {
   }
   // Only show tasks which are not completed yet
   if (event.target.id == 'active') {
-    JSON.parse(sessionStorage.getItem('todoTask'));
-    todoList.innerHTML =activeList.map(todoTask => 
+    JSON.parse(sessionStorage.getItem('listElement'));
+    shoppingList.innerHTML =activeList.map(listElement => 
       `<div>
-        <li id="${todoTask.id}" class="list-group-item justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom pb-0 mb-0">
-          <p class="pb-1 mb-1 ${todoTask.isDone}"><input class="form-check-input me-2" type="checkbox" onclick="completeToDo(event); "/>${todoTask.text}</p>
+        <li id="${listElement.id}" class="list-group-item justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom pb-0 mb-0">
+          <p class="pb-1 mb-1 ${listElement.isDone}"><input class="form-check-input me-2" type="checkbox" onclick="completeToDo(event); "/>${listElement.text}</p>
         </li>
      </div>    
      `).join('');
@@ -225,10 +225,10 @@ function selectView(event)  {
   // Only show tasks which are completed yet
   if (event.target.id == 'completed') {
   
-  todoList.innerHTML =completedList.map(completedTask => 
+  shoppingList.innerHTML =boughtItem.map(boughtItem => 
     `<div>
-      <li id="${completedTask.id}" class="list-group-item justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom pb-0 mb-0">
-       <p class="pb-1 mb-1 text-decoration-line-through"><input class="form-check-input me-2" type="checkbox" onclick="completeToDo(event); " checked />${completedTask.text}</p>
+      <li id="${boughtItem.id}" class="list-group-item justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom pb-0 mb-0">
+       <p class="pb-1 mb-1 text-decoration-line-through"><input class="form-check-input me-2" type="checkbox" onclick="completeToDo(event); " checked />${boughtItem.text}</p>
       </li>
     </div>    
     `).join('');
