@@ -9,8 +9,8 @@ const userData = useUserStore();
 
 <!-- FŐ TEMPLATE -->
 <template>
-  <Welcome v-if="!userData.user.id" /> <!-- Welcome.vue meghívása BE KELL IMPORTÁLNI - ellenőrzi hogy be van-e jelentkezve -->
-  <Home v-if="userData.user.id" /> <!-- Home.vue meghívása BE KELL IMPORTÁLNI - ha be van jelentkezve -->
+  <Welcome v-if="!userData.user.token" /> <!-- Welcome.vue meghívása BE KELL IMPORTÁLNI - ellenőrzi hogy be van-e jelentkezve -->
+  <Home v-if="userData.user.token" /> <!-- Home.vue meghívása BE KELL IMPORTÁLNI - ha be van jelentkezve -->
 </template>
 
 <!-- MINDENRE ÉRVÉNYES CSS -->

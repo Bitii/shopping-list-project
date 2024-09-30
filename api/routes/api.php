@@ -17,6 +17,8 @@ Route::patch('/products/{id}', [ProductsController::class, 'update'])
 Route::delete('/products/{id}', [ProductsController::class, 'destroy'])
     ->middleware('auth:sanctum');
 
+Route::post('/users/register', [UsersControllers::class, 'register']);
+
 Route::post('/users/login', [UsersControllers::class, 'login']);
 
 Route::get('/users', [UsersControllers::class, 'index'])

@@ -8,6 +8,28 @@ use Illuminate\Support\Facades\Hash;
 
 class UsersControllers extends Controller
 {
+    public function register(Request $request){
+        $username = $request->input("username");
+        $email = $request->input("email");
+        $password = $request->input("password");
+
+        $request->validate([
+            'username' => 'required',
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        $user = User::create([
+            'name' => $username,
+            'email' => $email,
+            'password' => Hash::make($password)
+        ]);
+
+        return response()->json([
+            'user' => $user
+        ]);
+    }
+
     public function login(Request $request)
     {
         $username = $request->input("username");

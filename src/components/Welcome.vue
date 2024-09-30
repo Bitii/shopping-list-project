@@ -38,14 +38,35 @@ const login = () => {
       username: username.value,
       password: password.value,
     })
-    .then((resp) =>
-    {
-      userData.user = resp.data.user
+    .then((resp) => {
+      userData.user = resp.data.user;
       console.log(userData.token, userData.user);
-      
     })
     .catch((err) => (error.value = "Hibás felhasználó vagy jelszó!"));
 };
+
+const register = () =>
+{
+  if (!regusername.value || !email.value || !regpassword.value) {
+    error.value = "Kérem töltse ki a mezőket!";
+    return;
+  }
+
+  axios
+  .post("http://localhost:8000/api/users/register", {
+    username: regusername.value,
+    email: email.value,
+    password: regpassword.value,
+  })
+  .then((resp) => {
+    userData.user = resp.data.user;
+    console.log(userData.token, userData.user);
+    alert("Sikeres regisztráció!");
+    location.reload();
+  })
+  .catch((err) => (error.value = "Sikertelen regisztráció!"));
+}
+
 </script>
 
 <template>
@@ -86,6 +107,7 @@ const login = () => {
         <!-- REGISTER -->
         <form id="signup" class="sign-up-form">
           <h2 class="title">Regisztráció</h2>
+          {{ error }}
           <div class="input-field">
             <i><font-awesome-icon icon="fa-solid fa-user" /></i>
             <input
@@ -108,7 +130,7 @@ const login = () => {
               v-model="regpassword"
             />
           </div>
-          <input type="submit" class="btn" value="Regisztráció" />
+          <input @click.prevent="register" type="submit" class="btn" value="Regisztráció" />
         </form>
       </div>
     </div>
