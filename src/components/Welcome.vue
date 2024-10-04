@@ -96,11 +96,7 @@ const register = () =>
               v-model="password"
             />
           </div>
-          <input
-            @click.prevent="login"
-            type="submit"
-            value="Bejelentkezés"
-            class="btn solid"
+          <input @click.prevent="login" type="submit" value="Bejelentkezés" class="btn solid"
           />
         </form>
 
