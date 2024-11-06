@@ -2,10 +2,11 @@
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import { useUserStore } from "../../stores/user";
-import router from "../router";
+import { useRouter } from "vue-router";
 
 // A DOM elem referencia létrehozása
 const container = ref(null);
+const router = useRouter();
 
 const username = ref("");
 const password = ref("");
