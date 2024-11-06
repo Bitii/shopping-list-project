@@ -1,239 +1,274 @@
 <template>
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Shopping list
-	</title>
-	<link rel="stylesheet" href="style.css">
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-	</head>
-<body>
-	<section class="vh-100">
-		<div class="container py-5 h-100">
-		  <div class="row d-flex justify-content-center align-items-center h-100 ">
-			<div class="col col-xl-10">
-	  
-			  <div class="card" style="border-radius: 15px;">
-				<div class="card-body p-5">
-	  
-				  <h6 class="mb-3">Shopping list</h6>
-	  
-				  <form class="d-flex justify-content-center align-items-center mb-4 ">
-					<div class="form-outline flex-fill">
-					  <input type="text" id="inputT" class="form-control form-control-lg" />
-					  <label class="form-label" for="form3">What do you want to buy?</label>
-					</div>
-					<button type="submit" class="btn btn-primary btn-lg ms-2" id="addB">Add</button>
-				  </form>
-
-				  <ul class="nav nav-tabs nav-fill " id="navbar" role="tablist">
-					<li class="nav-item" role="presentation">
-					  <a class="nav-link" id="all" data-mdb-toggle="tab" role="tab" href="#all"
-						aria-controls="ex1-tabs-1" aria-selected="true" onclick="selectView(event)">All</a>
-					</li>
-					<li class="nav-item" role="presentation">
-					  <a class="nav-link" id="active" data-mdb-toggle="tab"  role="tab" href="#active"
-						aria-controls="ex1-tabs-2" aria-selected="false" onclick="selectView(event)">Active</a>
-					</li>
-					<li class="nav-item" role="presentation">
-					  <a class="nav-link" id="completed" data-mdb-toggle="tab"  role="tab" href="#completed"
-						aria-controls="ex1-tabs-3" aria-selected="false" onclick="selectView(event)">Completed</a>
-					</li>
-				  </ul>
-
-				  <ul class="list-group mb-0" id="shoppingList">
-					 
-				
-				  </ul>
-	  
-				</div>
-			  </div>
-	  
-			</div>
-		  </div>
-		</div>
-	  </section>
-	<script src="app.js"></script>
-</body>
-</html>
+  <section class="vh-100">
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <h6 class="mb-3">Shopping list</h6>
+              <form class="form" @submit.prevent="addItem">
+                <div class="form-outline">
+                  <input type="text" v-model="newItem" class="form-control" placeholder="What do you want to buy?" />
+                </div>
+                <button type="submit" class="btn btn-primary">Add</button>
+              </form>
+              <ul class="nav-tabs" id="navbar" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <a class="nav-link" :class="{ active: view === 'all' }" @click="selectView('all')" role="tab">All</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <a class="nav-link" :class="{ active: view === 'active' }" @click="selectView('active')"
+                    role="tab">Active</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <a class="nav-link" :class="{ active: view === 'completed' }" @click="selectView('completed')"
+                    role="tab">Completed</a>
+                </li>
+              </ul>
+              <div class="tab-content">
+                <div v-if="view === 'all' || view === 'active'" class="tab-pane show active">
+                  <ul class="list-group">
+                    <li v-for="item in filteredItems" :key="item.id" class="list-group-item">
+                      <div class="d-flex align-items-center">
+                        <input class="form-check-input" type="checkbox" :checked="item.completed"
+                          @change="toggleItem(item.id)" />
+                        <span :class="{ 'text-decoration-line-through': item.completed }">{{ item.text }}</span>
+                      </div>
+                      <button class="btn btn-danger" @click="removeItem(item.id)">Remove</button>
+                    </li>
+                  </ul>
+                </div>
+                <div v-if="view === 'completed'" class="tab-pane show active">
+                  <ul class="list-group">
+                    <li v-for="item in completedItems" :key="item.id" class="list-group-item">
+                      <div class="d-flex align-items-center">
+                        <input class="form-check-input" type="checkbox" :checked="item.completed"
+                          @change="toggleItem(item.id)" />
+                        <span class="text-decoration-line-through">{{ item.text }}</span>
+                      </div>
+                      <button class="btn btn-danger" @click="removeItem(item.id)">Remove</button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </template>
 
-<script>
-// Main parts of html side for user interaction
-const listInput = document.getElementById('inputT');
-const addButton = document.getElementById('addB');
-const shoppingList = document.getElementById('shoppingList');
-const activeMenu = document.getElementById('active');
-const allMenu = document.getElementById('all');
-const completedMenu = document.getElementById('completed');
+<script setup>
+import { ref, computed } from 'vue';
 
-// Arrays for 3 types of tasks 
-let activeList = JSON.parse(sessionStorage.getItem('listElement')) || [];
-let boughtItem = JSON.parse(sessionStorage.getItem('boughtItem')) || [];
-let allItems = JSON.parse(sessionStorage.getItem('listElement')) || [];
+const newItem = ref('');
+const items = ref([]);
+const view = ref('all');
 
-// Random generated id for tasks
-function randomId() {
-  let S4 = function() {
-     return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
-  };
-  return (S4()+S4());
-}
-
-// Task added to list via input typed by user
- addButton.addEventListener('click', function addToDo(event)  {
-  event.preventDefault();
-      if (listInput.value == ''){
-        alert ('You have to type something');
-      } 
-      else  {
-        const listElement = {
-          id: randomId(),
-          text: listInput.value,
-          isDone: false
-        }
-      if (window.location.href.indexOf('#all') > -1 || window.location.href.indexOf('#active') > -1) {
-        const newTodo = document.createElement('div');
-        newTodo.innerHTML =  
-        `<li id="${listElement.id}" class="list-group-item justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom pb-0 mb-0">
-         <p class="pb-1 mb-1"><input class="form-check-input me-2" type="checkbox" onclick="completeToDo(event); "/>${listInput.value}</p>
-        </li>`;
-        
-      shoppingList.appendChild(newTodo);
-
-      } else if (window.location.href.indexOf('#completed') > -1 ) {
-        console.log('Nothing to display here')
-      }
-
-      
-      activeList.push(listElement);
-      sessionStorage.setItem('listElement', JSON.stringify(activeList));
-      
-      allItems.push(listElement);
-      sessionStorage.setItem('listElement', JSON.stringify(allItems));
-
-      listInput.value = '';
-    }
+const addItem = () =>
+{
+  if (newItem.value.trim() !== '')
+  {
+    items.value.push({ id: Date.now(), text: newItem.value, completed: false });
+    newItem.value = '';
   }
-);
-        
+};
 
-  // Checked checkboxes make todo texts line through
-function completeToDo(event) {
-    
-  let selectedText = event.target.parentNode;
-  let selectedId = event.target.parentNode.parentNode.id;
-  let selectedDiv = event.target.parentNode.parentNode.parentNode;
-  selectedText.classList.toggle('text-decoration-line-through'); 
-  
-  let index = allItems.map(listElement => {
-    return listElement.id;}).indexOf(selectedId);
-    if (allItems[index].isDone == false){
-    allItems[index].isDone == false
-    ? (allItems[index].isDone = true) 
-    : (allItems[index].isDone = false);
-
-    const boughtItem = {
-      id: selectedId,
-      text: selectedText.innerText,
-      isDone:allItems[index].isDone
-    };
-
-    JSON.parse(sessionStorage.getItem('listElement'));
-    activeList.splice(index, 1);
-    sessionStorage.setItem('listElement', JSON.stringify(allItems));
-
-    boughtItem.push(boughtItem);
-    sessionStorage.setItem('boughtItem', JSON.stringify(boughtItem));
-    
-
-  // With timeout the selected task is removed from display
-  if (window.location.href.indexOf('active') > -1)
-{  setTimeout(function() {
-    selectedDiv.classList.toggle('visually-hidden');
-      }, 3000);
-  }    
-// Undo the completed task 
-      } else if (allItems[index].isDone == true) {
-      let index = allItems.map(boughtItem => {
-        return boughtItem.id;}).indexOf(selectedId);
-      allItems[index].isDone == true
-    ? (allItems[index].isDone = false) 
-    : (allItems[index].isDone = true);
-
-      const boughtItem = {
-        id: selectedId,
-        text: selectedText.innerText,
-        isDone:allItems[index].isDone
-      };
-      if (window.location.href.indexOf('completed') > -1 )
-    {
-      setTimeout(function() {
-      selectedDiv.classList.toggle('visually-hidden');
-    }, 3000);
+const toggleItem = (id) =>
+{
+  const item = items.value.find(item => item.id === id);
+  if (item)
+  {
+    item.completed = !item.completed;
   }
-      boughtItem.splice(index.boughtItem, 1);
-      sessionStorage.removeItem('boughtItem');
-      activeList.push(boughtItem);
-      sessionStorage.setItem('listElement', JSON.stringify(allItems));
-      
-    }
+};
+
+const removeItem = (id) =>
+{
+  items.value = items.value.filter(item => item.id !== id);
+};
+
+const selectView = (selectedView) =>
+{
+  view.value = selectedView;
+};
+
+const filteredItems = computed(() =>
+{
+  if (view.value === 'active')
+  {
+    return items.value.filter(item => !item.completed);
+  } else if (view.value === 'completed')
+  {
+    return items.value.filter(item => item.completed);
   }
+  return items.value;
+});
 
-
-
-
-// Display rendering based on the user's selected menu
-function selectView(event)  {
-  // Show all tasks added by the user
-  if (event.target.id == 'all') {
-
-    shoppingList.innerHTML = allItems.map(listElement => 
-      `<div>
-        <li id="${listElement.id}" class="list-group-item justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom pb-0 mb-0">
-          <p class="pb-1 mb-1 ${listElement.isDone}"><input class="form-check-input me-2" type="checkbox" onclick="completeToDo(event);"/>${listElement.text}</p> 
-          </li>
-      </div>    
-    `).join('');
-    console.log('all');
-    let completed = document.querySelectorAll('.true');
-    for(let i = 0; i < completed.length; i++) {
-    completed[i].classList.add('text-decoration-line-through');
-    completed[i].firstElementChild.checked = true;
-    }
-  }
-  // Only show tasks which are not completed yet
-  if (event.target.id == 'active') {
-    JSON.parse(sessionStorage.getItem('listElement'));
-    shoppingList.innerHTML =activeList.map(listElement => 
-      `<div>
-        <li id="${listElement.id}" class="list-group-item justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom pb-0 mb-0">
-          <p class="pb-1 mb-1 ${listElement.isDone}"><input class="form-check-input me-2" type="checkbox" onclick="completeToDo(event); "/>${listElement.text}</p>
-        </li>
-     </div>    
-     `).join('');
-    console.log('active');
-    let completed = document.querySelectorAll('.true');
-    for(let i = 0; i < completed.length; i++) {
-    completed[i].parentNode.classList.add('visually-hidden');
-    completed[i].firstElementChild.checked = true;
-    }
-  }
-  // Only show tasks which are completed yet
-  if (event.target.id == 'completed') {
-  
-  shoppingList.innerHTML =boughtItem.map(boughtItem => 
-    `<div>
-      <li id="${boughtItem.id}" class="list-group-item justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom pb-0 mb-0">
-       <p class="pb-1 mb-1 text-decoration-line-through"><input class="form-check-input me-2" type="checkbox" onclick="completeToDo(event); " checked />${boughtItem.text}</p>
-      </li>
-    </div>    
-    `).join('');
-    
-    console.log('completed');
-  }
-}
+const completedItems = computed(() =>
+{
+  return items.value.filter(item => item.completed);
+});
 </script>
+
+<style scoped>
+body {
+  background-color: #f0f2f5;
+  font-family: 'Roboto', sans-serif;
+}
+
+.vh-100 {
+  height: 100vh;
+}
+
+.container {
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.row {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.col {
+  max-width: 800px;
+  width: 100%;
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+}
+
+.card-body {
+  padding: 2rem;
+}
+
+.mb-3 {
+  margin-bottom: 1rem;
+}
+
+.form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.form-outline {
+  flex: 1;
+  margin-right: 1rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 10px;
+  border: 1px solid #ced4da;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: #ffffff;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+}
+
+.nav-tabs {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.nav-item {
+  list-style: none;
+}
+
+.nav-link {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  color: #007bff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #0056b3;
+}
+
+.nav-link.active {
+  color: #ffffff;
+  background-color: #007bff;
+  border-radius: 10px;
+}
+
+.tab-content {
+  margin-top: 1rem;
+}
+
+.tab-pane {
+  display: none;
+}
+
+.tab-pane.show {
+  display: block;
+}
+
+.list-group {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.list-group-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 10px;
+  margin-bottom: 0.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.list-group-item:hover {
+  background-color: #f1f1f1;
+}
+
+.form-check-input {
+  margin-right: 0.5rem;
+}
+
+.text-decoration-line-through {
+  text-decoration: line-through;
+  color: #6c757d;
+}
+</style>

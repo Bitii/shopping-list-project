@@ -3,14 +3,14 @@
 import Welcome from "./components/Welcome.vue";
 import Home from "./components/Home.vue";
 import { useUserStore } from "../stores/user";
+import { RouterLink, useRouter } from "vue-router";
 
 const userData = useUserStore();
 </script>
 
 <!-- FŐ TEMPLATE -->
 <template>
-  <Welcome v-if="!userData.user.token" /> <!-- Welcome.vue meghívása BE KELL IMPORTÁLNI - ellenőrzi hogy be van-e jelentkezve -->
-  <Home v-if="userData.user.token" /> <!-- Home.vue meghívása BE KELL IMPORTÁLNI - ha be van jelentkezve -->
+  <router-view />
 </template>
 
 <!-- MINDENRE ÉRVÉNYES CSS -->

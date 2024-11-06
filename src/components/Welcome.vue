@@ -2,6 +2,7 @@
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import { useUserStore } from "../../stores/user";
+import router from "../router";
 
 // A DOM elem referencia létrehozása
 const container = ref(null);
@@ -27,22 +28,22 @@ const switchToSignIn = () => {
     container.value.classList.remove("sign-up-mode");
   }
 };
-const login = () => {
+const login = async () => {
   if (!username.value || !password.value) {
     error.value = "Kérem töltse ki a mezőket!";
     return;
   }
-
-  axios
-    .post("http://localhost:8000/api/users/login", {
+  try {
+    let resp = await axios.post("http://localhost:8000/api/users/login", {
       username: username.value,
       password: password.value,
-    })
-    .then((resp) => {
-      userData.user = resp.data.user;
-      console.log(userData.token, userData.user);
-    })
-    .catch((err) => (error.value = "Hibás felhasználó vagy jelszó!"));
+    });
+    userData.user = resp.data.user;
+    router.push("/list");
+  } catch (error) {
+    error.value = "Hibás felhasználó vagy jelszó!";
+    console.log(error);    
+  }
 };
 
 const register = () =>
