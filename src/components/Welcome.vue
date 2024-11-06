@@ -47,26 +47,27 @@ const login = async () => {
   }
 };
 
-const register = () =>
+const register = async () =>
 {
   if (!regusername.value || !email.value || !regpassword.value) {
     error.value = "Kérem töltse ki a mezőket!";
     return;
   }
-
-  axios
-  .post("http://localhost:8000/api/users/register", {
-    username: regusername.value,
-    email: email.value,
-    password: regpassword.value,
-  })
-  .then((resp) => {
+  try
+  {
+    let resp = await axios.post("http://localhost:8000/api/users/register", {
+      username: regusername.value,
+      email: email.value,
+      password: regpassword.value,
+    });
     userData.user = resp.data.user;
-    console.log(userData.token, userData.user);
     alert("Sikeres regisztráció!");
-    location.reload();
-  })
-  .catch((err) => (error.value = "Sikertelen regisztráció!"));
+    location.reload();   
+  } catch (error) {
+    error.value = "Sikertelen regisztráció!";
+    console.log(error);
+    
+  }
 }
 
 </script>
