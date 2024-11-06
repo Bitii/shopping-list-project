@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import axios from "axios";
 import { useUserStore } from "../../stores/user";
 import { useRouter } from "vue-router";
@@ -39,7 +39,7 @@ const login = async () => {
       username: username.value,
       password: password.value,
     });
-    userData.user = resp.data.user;
+    userData.setUser(resp.data.user);
     router.push("/list");
   } catch (error) {
     error.value = "Hibás felhasználó vagy jelszó!";
@@ -60,7 +60,7 @@ const register = async () =>
       email: email.value,
       password: regpassword.value,
     });
-    userData.user = resp.data.user;
+    userData.setUser(resp.data.user);
     alert("Sikeres regisztráció!");
     location.reload();   
   } catch (error) {

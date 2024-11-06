@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import List from "../components/List.vue";
 import Welcome from "../components/Welcome.vue";
+import { useUserStore } from "../../stores/user";
 
 const routes = [
     { path: "/", component: Welcome },
@@ -10,6 +11,15 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(),
     routes,
+});
+
+router.beforeEach((to, from, next) => {
+  const userStore = useUserStore();
+  if (to.path === "/list" && !userStore.user) {
+    next("/");
+  } else {
+    next();
+  }
 });
 
 export default router;

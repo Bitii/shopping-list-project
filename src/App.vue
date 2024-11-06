@@ -1,7 +1,7 @@
 <!-- MINDENRE ÉRVÉNYES SCRIPT -->
 <script setup>
 import Welcome from "./components/Welcome.vue";
-import Home from "./components/Home.vue";
+import List from "./components/List.vue";
 import { useUserStore } from "../stores/user";
 import { RouterLink, useRouter } from "vue-router";
 
