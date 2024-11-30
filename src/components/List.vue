@@ -123,6 +123,7 @@ body {
 }
 
 .container {
+  background-color: skyblue;
   padding: 2rem;
   display: flex;
   justify-content: center;
@@ -154,6 +155,7 @@ body {
 
 .mb-3 {
   margin-bottom: 1rem;
+  font-size: 1em;
 }
 
 .form {
@@ -169,6 +171,7 @@ body {
 }
 
 .form-control {
+  font-size: 1em;
   width: 100%;
   padding: 0.75rem;
   border-radius: 10px;
@@ -176,11 +179,12 @@ body {
 }
 
 .btn {
+  font-size: 1em;
   padding: 0.75rem 1.5rem;
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.5s ease;
 }
 
 .btn-primary {
@@ -206,6 +210,7 @@ body {
   justify-content: space-around;
   margin-bottom: 1rem;
   border-bottom: 1px solid #dee2e6;
+  padding-bottom: 1rem;
 }
 
 .nav-item {
@@ -217,11 +222,13 @@ body {
   cursor: pointer;
   color: #007bff;
   text-decoration: none;
-  transition: color 0.3s ease;
+  transition: color 0.5s ease, background-color 0.5s ease;
+  border-radius: 10px;
 }
 
 .nav-link:hover {
   color: #0056b3;
+  
 }
 
 .nav-link.active {
