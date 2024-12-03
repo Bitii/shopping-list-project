@@ -1,9 +1,15 @@
 <template>
   <section class="vh-100">
     <div class="container">
+            
       <div class="row">
         <div class="col">
           <div class="card">
+            <!-- <router-link style="text-decoration: none;" to="/guide">
+            <div class="info-box">
+                        <a class="info-icon">?</a>
+                      </div>
+            </router-link> -->
             <div class="card-body">
               <h6 class="mb-3">Shopping list</h6>
               <form class="form" @submit.prevent="addItem">
@@ -22,7 +28,7 @@
                 </li>
                 <li class="nav-item" role="presentation">
                   <a class="nav-link" :class="{ active: view === 'completed' }" @click="selectView('completed')"
-                    role="tab">Completed</a>
+                    role="tab">Bought</a>
                 </li>
               </ul>
               <div class="tab-content">
@@ -131,6 +137,34 @@ body {
   height: 100%;
 }
 
+.info-box {
+  text-decoration: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 30%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+
+}
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.info-box:hover {
+  background-color: #0056b3;
+  animation: rotate 0.5s ease-in-out;
+}
 .row {
   width: 100%;
   display: flex;
@@ -155,8 +189,9 @@ body {
 
 .mb-3 {
   margin-bottom: 1rem;
-  font-size: 1em;
-}
+    font-size: 1em;
+  }
+
 
 .form {
   display: flex;
