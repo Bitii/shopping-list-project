@@ -31,7 +31,7 @@ const switchToSignIn = () => {
 };
 const login = async () => {
   if (!username.value || !password.value) {
-    error.value = "Kérem töltse ki a mezőket!";
+    error.value = "Please fill in the fields!";
     return;
   }
   try {
@@ -42,7 +42,7 @@ const login = async () => {
     userData.setUser(resp.data.user);
     router.push("/list");
   } catch (err) { 
-    error.value = "Hibás felhasználó vagy jelszó!";
+    error.value = "Wrong password or username!";
     console.log(err);
   }
 };
@@ -50,10 +50,10 @@ const login = async () => {
 const register = async () =>
 {
   if (!regusername.value || !email.value || !regpassword.value) {
-    error.value = "Kérem töltse ki a mezőket!";
+    error.value = "Please fill in the fields!";
     return;
-  }
-  try
+  } else {
+    try
   {
     let resp = await axios.post("http://localhost:8000/api/users/register", {
       username: regusername.value,
@@ -61,13 +61,15 @@ const register = async () =>
       password: regpassword.value,
     });
     userData.setUser(resp.data.user);
-    alert("Sikeres regisztráció!");
+    alert("Register successful!");
     location.reload();   
   } catch (error) {
-    error.value = "Sikertelen regisztráció!";
+    error.value = "Register failed!";
     console.log(error);
     
   }
+  }
+  
 }
 </script>
 
@@ -106,7 +108,8 @@ const register = async () =>
 
         <form id="signup" class="sign-up-form">
           <h2 class="title">Sign up</h2>
-          {{ error }}
+          <div v-if="error" class="warning-message">{{ error }}</div>
+
           <div class="input-field">
             <i><font-awesome-icon icon="fa-solid fa-user" /></i>
             <input
