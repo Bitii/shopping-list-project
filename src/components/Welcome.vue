@@ -75,7 +75,7 @@ const register = async () =>
   <div ref="container" class="container">
     <div class="forms-container">
       <div class="signin-signup">
-        <!-- LOGIN -->
+
 
         <form class="sign-in-form">
           <h2 class="title">Login</h2>
@@ -103,7 +103,7 @@ const register = async () =>
           />
         </form>
 
-        <!-- REGISTER -->
+
         <form id="signup" class="sign-up-form">
           <h2 class="title">Sign up</h2>
           {{ error }}
@@ -133,7 +133,7 @@ const register = async () =>
         </form>
       </div>
     </div>
-    <!-- Panels and buttons -->
+
     <div class="panels-container">
       <div class="panel left-panel">
         <div class="content">
@@ -375,7 +375,7 @@ form.sign-in-form {
   margin-bottom: 10px;
 }
 
-/* ANIMATION */
+
 
 .container.sign-up-mode:before {
   transform: translate(100%, -50%);
@@ -414,7 +414,7 @@ form.sign-in-form {
   pointer-events: all;
 }
 
-/* RESPONSIVE*/
+
 
 @media (max-width: 870px) {
   .container {
