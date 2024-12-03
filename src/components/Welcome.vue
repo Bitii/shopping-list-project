@@ -79,13 +79,13 @@ const register = async () =>
         <!-- LOGIN -->
 
         <form class="sign-in-form">
-          <h2 class="title">Bejelentkezés</h2>
+          <h2 class="title">Login</h2>
           {{ error }}
           <div class="input-field">
             <i><font-awesome-icon icon="fa-solid fa-user" /></i>
             <input
               type="text"
-              placeholder="Felhasználónév"
+              placeholder="Username"
               required
               v-model="username"
             />
@@ -94,24 +94,24 @@ const register = async () =>
             <i><font-awesome-icon icon="fa-solid fa-lock" /></i>
             <input
               type="password"
-              placeholder="Jelszó"
+              placeholder="Password"
               required
               v-model="password"
             />
           </div>
-          <input @click.prevent="login" type="submit" value="Bejelentkezés" class="btn solid"
+          <input @click.prevent="login" type="submit" value="Login" class="btn solid"
           />
         </form>
 
         <!-- REGISTER -->
         <form id="signup" class="sign-up-form">
-          <h2 class="title">Regisztráció</h2>
+          <h2 class="title">Sign up</h2>
           {{ error }}
           <div class="input-field">
             <i><font-awesome-icon icon="fa-solid fa-user" /></i>
             <input
               type="text"
-              placeholder="Felhasználónév"
+              placeholder="Username"
               required
               v-model="regusername"
             />
@@ -124,12 +124,12 @@ const register = async () =>
             <i><font-awesome-icon icon="fa-solid fa-lock" /></i>
             <input
               type="password"
-              placeholder="Jelszó"
+              placeholder="Password"
               required
               v-model="regpassword"
             />
           </div>
-          <input @click.prevent="register" type="submit" class="btn" value="Regisztráció" />
+          <input @click.prevent="register" type="submit" class="btn" value="Sign up" />
         </form>
       </div>
     </div>
@@ -137,31 +137,30 @@ const register = async () =>
     <div class="panels-container">
       <div class="panel left-panel">
         <div class="content">
-          <h3>Még nem regisztrált ?</h3>
+          <h3>Not yet registered ?</h3>
           <p>
-            Hozzon létre egyszerűen egy felhasználói fiókot, hogy teljes elérést
-            kapjon az összes funkcióhoz.
+            Create an account and start your own shopping list.
           </p>
           <button
             class="btn transparent"
             id="sign-up-btn"
             @click="switchToSignUp"
           >
-            Regisztráció
+            Sign up
           </button>
         </div>
         <img src="../../public/login.svg" class="image" alt="login image" />
       </div>
       <div class="panel right-panel">
         <div class="content">
-          <h3>Már regisztrált ?</h3>
-          <p>Lépjen be a fiókjába és kezdje el a bevásárlólistáját.</p>
+          <h3>Are you registered already?</h3>
+          <p>Let's login and start writing your shopping list.</p>
           <button
             class="btn transparent"
             id="sign-in-btn"
             @click="switchToSignIn"
           >
-            Bejelentkezés
+            Login
           </button>
         </div>
         <img
