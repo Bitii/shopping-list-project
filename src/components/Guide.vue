@@ -37,6 +37,12 @@
           Each item has a red "Remove" button. Clicking this button will delete the item from the list entirely, no matter which section it's in.
         </p>
       </section>
+      <section class="step">
+        <h2>Step 5: Edit Items</h2>
+        <p>
+          To edit an item, click the "Edit" button. The item's text will become an input field. After editing, press "Save" to save the changes or if you change your mind, just press the Cancel button and the changes will not be save.
+        </p>
+      </section>
   
       <section class="note">
         <h2>Note</h2>

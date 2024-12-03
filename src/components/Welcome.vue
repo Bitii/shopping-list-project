@@ -4,6 +4,8 @@ import axios from "axios";
 import { useUserStore } from "../../stores/user";
 import { useRouter } from "vue-router";
 
+
+
 // A DOM elem referencia létrehozása
 const container = ref(null);
 const router = useRouter();
@@ -41,9 +43,9 @@ const login = async () => {
     });
     userData.setUser(resp.data.user);
     router.push("/list");
-  } catch (error) {
+  } catch (err) { // Helyes hibakezelés
     error.value = "Hibás felhasználó vagy jelszó!";
-    console.log(err);    
+    console.log(err);
   }
 };
 
@@ -69,6 +71,7 @@ const register = async () =>
     
   }
 }
+
 
 </script>
 
