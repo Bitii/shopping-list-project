@@ -34,27 +34,33 @@
               <div class="tab-content">
                 <div v-if="view === 'all' || view === 'active'" class="tab-pane show active">
                   <ul class="list-group">
-                    <li v-for="item in filteredItems" :key="item.id" class="list-group-item">
-                      <div class="d-flex align-items-center">
-                        <input class="form-check-input" type="checkbox" :checked="item.completed"
-                          @change="toggleItem(item.id)" />
-                        <span :class="{ 'text-decoration-line-through': item.completed }">{{ item.text }}</span>
-                      </div>
-                      <button class="btn btn-danger" @click="removeItem(item.id)">Remove</button>
-                    </li>
-                  </ul>
-                </div>
-                <div v-if="view === 'completed'" class="tab-pane show active">
-                  <ul class="list-group">
-                    <li v-for="item in completedItems" :key="item.id" class="list-group-item">
-                      <div class="d-flex align-items-center">
-                        <input class="form-check-input" type="checkbox" :checked="item.completed"
-                          @change="toggleItem(item.id)" />
-                        <span class="text-decoration-line-through">{{ item.text }}</span>
-                      </div>
-                      <button class="btn btn-danger" @click="removeItem(item.id)">Remove</button>
-                    </li>
-                  </ul>
+                <li v-for="item in filteredItems" :key="item.id" class="list-group-item">
+                  <div v-if="!item.editMode" class="d-flex align-items-center">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      :checked="item.completed"
+                      @change="toggleItem(item.id)"
+                    />
+                    <span :class="{ 'text-decoration-line-through': item.completed }">
+                      {{ item.text }}
+                    </span>
+                    
+                  </div>
+                  <div v-else class="d-flex align-items-center">
+                    <input
+                      type="text"
+                      v-model="item.text"
+                      class="form-control me-2"
+                      @keyup.enter="disableEdit(item.id)"
+                    />
+                    <button class="btn btn-edit" @click="disableEdit(item.id)">Save</button>
+                    <button class="btn btn-danger btn-edit " @click="cancelEdit(item)">Cancel</button>
+                  </div>
+                  <button class="btn " v-if="!item.editMode" @click="enableEdit(item.id)">Edit</button>
+                  <button class="btn btn-danger" @click="removeItem(item.id)">Remove</button>
+                </li>
+              </ul>
                 </div>
               </div>
             </div>
@@ -71,6 +77,8 @@ import { ref, computed } from 'vue';
 const newItem = ref('');
 const items = ref([]);
 const view = ref('all');
+
+const originalItemText = ref('');
 
 const addItem = () =>
 {
@@ -98,6 +106,24 @@ const removeItem = (id) =>
 const selectView = (selectedView) =>
 {
   view.value = selectedView;
+};
+const enableEdit = (id) => {
+  const item = items.value.find(item => item.id === id);
+  if (item) {
+    originalItemText.value = item.text; // Backup the original text
+    item.editMode = true;
+  }
+};
+
+const disableEdit = (id) => {
+  const item = items.value.find(item => item.id === id);
+  if (item) {
+    item.editMode = false;
+  }
+};
+const cancelEdit = (item) => {
+  item.text = originalItemText.value; // Restore the original text
+  item.editMode = false;
 };
 
 const filteredItems = computed(() =>
@@ -191,7 +217,12 @@ body {
   margin-bottom: 1rem;
     font-size: 1em;
   }
-
+.d-flex {
+  display: flex;
+}
+.align-items-center {
+  align-items: center;
+}
 
 .form {
   display: flex;
@@ -221,11 +252,15 @@ body {
   border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.5s ease;
+  width:max-content;
 }
 
 .btn-primary {
   background-color: #007bff;
   color: #ffffff;
+}
+.btn-edit {
+  margin-inline: 0.5rem;
 }
 
 .btn-primary:hover {

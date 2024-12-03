@@ -43,7 +43,7 @@ const login = async () => {
     router.push("/list");
   } catch (error) {
     error.value = "Hibás felhasználó vagy jelszó!";
-    console.log(error);    
+    console.log(err);    
   }
 };
 
@@ -80,7 +80,8 @@ const register = async () =>
 
         <form class="sign-in-form">
           <h2 class="title">Login</h2>
-          {{ error }}
+          
+          <div v-if="error" class="warning-message">{{ error }}</div>
           <div class="input-field">
             <i><font-awesome-icon icon="fa-solid fa-user" /></i>
             <input
@@ -368,6 +369,11 @@ form.sign-in-form {
 .right-panel .image,
 .right-panel .content {
   transform: translateX(800px);
+}
+.warning-message {
+  color: red;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
 /* ANIMATION */
