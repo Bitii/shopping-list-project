@@ -70,78 +70,84 @@
     </div>
   </section>
 </template>
-
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 
 const newItem = ref('');
-const items = ref([]);
+const items = ref(JSON.parse(localStorage.getItem('shoppingList')) || []); 
 const view = ref('all');
-
 const originalItemText = ref('');
 
-const addItem = () =>
-{
-  if (newItem.value.trim() !== '')
-  {
-    items.value.push({ id: Date.now(), text: newItem.value, completed: false });
+
+const saveToLocalStorage = () => {
+  localStorage.setItem('shoppingList', JSON.stringify(items.value));
+};
+
+
+const addItem = () => {
+  if (newItem.value.trim() !== '') {
+    items.value.push({ id: Date.now(), text: newItem.value, completed: false, editMode: false });
     newItem.value = '';
+    saveToLocalStorage(); 
   }
 };
 
-const toggleItem = (id) =>
-{
-  const item = items.value.find(item => item.id === id);
-  if (item)
-  {
+
+const toggleItem = (id) => {
+  const item = items.value.find((item) => item.id === id);
+  if (item) {
     item.completed = !item.completed;
+    saveToLocalStorage(); 
   }
 };
 
-const removeItem = (id) =>
-{
-  items.value = items.value.filter(item => item.id !== id);
+
+const removeItem = (id) => {
+  items.value = items.value.filter((item) => item.id !== id);
+  saveToLocalStorage();
 };
 
-const selectView = (selectedView) =>
-{
+
+const selectView = (selectedView) => {
   view.value = selectedView;
 };
+
+
 const enableEdit = (id) => {
-  const item = items.value.find(item => item.id === id);
+  const item = items.value.find((item) => item.id === id);
   if (item) {
-    originalItemText.value = item.text; // Backup the original text
+    originalItemText.value = item.text;
     item.editMode = true;
   }
 };
 
+
 const disableEdit = (id) => {
-  const item = items.value.find(item => item.id === id);
+  const item = items.value.find((item) => item.id === id);
   if (item) {
     item.editMode = false;
+    saveToLocalStorage(); 
   }
 };
+
+
 const cancelEdit = (item) => {
-  item.text = originalItemText.value; // Restore the original text
+  item.text = originalItemText.value;
   item.editMode = false;
 };
 
-const filteredItems = computed(() =>
-{
-  if (view.value === 'active')
-  {
-    return items.value.filter(item => !item.completed);
-  } else if (view.value === 'completed')
-  {
-    return items.value.filter(item => item.completed);
+
+const filteredItems = computed(() => {
+  if (view.value === 'active') {
+    return items.value.filter((item) => !item.completed);
+  } else if (view.value === 'completed') {
+    return items.value.filter((item) => item.completed);
   }
   return items.value;
 });
 
-const completedItems = computed(() =>
-{
-  return items.value.filter(item => item.completed);
-});
+
+watch(items, saveToLocalStorage, { deep: true });
 </script>
 
 <style scoped>

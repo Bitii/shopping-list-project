@@ -3,9 +3,10 @@
 
 Az alkalmazás elindításához szükséges parancsok:
 1. npm install
-2. php artisan migrate paranncsal importálható az adatbázis szerkezete
-3. A fő mappából npm run dev paranncsal indítható az oldal
-4. Az api mappában a php artisan serve paranncsal indítható a szerver
+2. Az api mappában composer install
+3. php artisan migrate paranncsal importálható az adatbázis szerkezete
+4. A fő mappából npm run dev paranncsal indítható az oldal
+5. Az api mappában a php artisan serve paranncsal indítható a szerver
 
 Továbbá szükséges még az XAMPP-on keresztül az Apache és MySQL futtatása.
 

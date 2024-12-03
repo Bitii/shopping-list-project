@@ -5,8 +5,6 @@ import { useUserStore } from "../../stores/user";
 import { useRouter } from "vue-router";
 
 
-
-// A DOM elem referencia létrehozása
 const container = ref(null);
 const router = useRouter();
 
@@ -19,7 +17,7 @@ const error = ref("");
 
 const userData = useUserStore();
 
-// A funkciók az osztályok hozzáadására és eltávolítására
+
 const switchToSignUp = () => {
   if (container.value) {
     container.value.classList.add("sign-up-mode");
@@ -43,7 +41,7 @@ const login = async () => {
     });
     userData.setUser(resp.data.user);
     router.push("/list");
-  } catch (err) { // Helyes hibakezelés
+  } catch (err) { 
     error.value = "Hibás felhasználó vagy jelszó!";
     console.log(err);
   }
@@ -71,8 +69,6 @@ const register = async () =>
     
   }
 }
-
-
 </script>
 
 <template>

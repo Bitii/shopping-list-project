@@ -1,5 +1,4 @@
 <template>
-    
     <div id="guide">
       <h1>How to Use This App</h1>
       
