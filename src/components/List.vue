@@ -5,11 +5,11 @@
       <div class="row">
         <div class="col">
           <div class="card">
-            <!-- <router-link style="text-decoration: none;" to="/guide">
+            <router-link style="text-decoration: none;" to="/guide">
             <div class="info-box">
                         <a class="info-icon">?</a>
                       </div>
-            </router-link> -->
+            </router-link>
             <div class="card-body">
               <h6 class="mb-3">Shopping list</h6>
               <form class="form" @submit.prevent="addItem">
@@ -216,6 +216,7 @@ body {
 .btn {
   font-size: 1em;
   padding: 0.75rem 1.5rem;
+  margin: 0;
   border: none;
   border-radius: 10px;
   cursor: pointer;
@@ -298,7 +299,7 @@ body {
   border: 1px solid #ced4da;
   border-radius: 10px;
   margin-bottom: 0.5rem;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease
 }
 
 .list-group-item:hover {
@@ -313,4 +314,5 @@ body {
   text-decoration: line-through;
   color: #6c757d;
 }
+
 </style>
