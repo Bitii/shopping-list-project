@@ -28,11 +28,11 @@
                 </li>
                 <li class="nav-item" role="presentation">
                   <a class="nav-link" :class="{ active: view === 'completed' }" @click="selectView('completed')"
-                    role="tab">Bought</a>
+                    role="tab">Completed</a>
                 </li>
               </ul>
               <div class="tab-content">
-                <div v-if="view === 'all' || view === 'active'" class="tab-pane show active">
+                <div class="tab-pane show active">
                   <ul class="list-group">
                 <li v-for="item in filteredItems" :key="item.id" class="list-group-item">
                   <div v-if="!item.editMode" class="d-flex align-items-center">
