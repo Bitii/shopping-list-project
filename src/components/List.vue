@@ -28,7 +28,7 @@
                 </li>
                 <li class="nav-item" role="presentation">
                   <a class="nav-link" :class="{ active: view === 'completed' }" @click="selectView('completed')"
-                    role="tab">Completed</a>
+                    role="tab">Bought</a>
                 </li>
               </ul>
               <div class="tab-content">
